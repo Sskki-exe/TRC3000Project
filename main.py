@@ -2,24 +2,14 @@
 #Take an image with PiCam @Calvin Medeira 
 #Read load sensor @pat 
 
-# must do "pip3 install HX711" first 
+# must do "pip install hx711-rpi-py==1.57.0" first 
 # rpi gpio has to be also installed
-from hx711 import HX711
+from HX711 import *
 
-try:
-        hx711 = HX711(
-            dout_pin=5,
-            pd_sck_pin=6,
-            channel='A',
-            gain=64
-        )
-
-        hx711.reset()   # Before we start, reset the HX711 (not obligate)
-        measures = hx711.get_raw_data(num_measures=3)
-finally:
-        GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
-
-print("\n".join(measures))
+hx = SimpleHX711(2, 3, -370, -367471)
+hx.zero()
+while True:
+  print(hx.weight(35))
 
 
 compensation = 0
