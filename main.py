@@ -1,4 +1,22 @@
 #Spin servo @Dylan 
+import RPi.GPIO as GPIO
+from time import sleep
+
+gpio_num=11 #Can change??
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(gpio_num, GPIO.OUT)
+pwm=GPIO.PWM(gpio_num, 50) #Second parameter = freq.
+pwm.start(0)
+
+def setAngle(angle):
+    duty = angle / 18 + 3
+    GPIO.output(gpio_num, True)
+    pwm.ChangeDutyCycle(duty)
+    sleep(1)
+    GPIO.output(gpio_num, False)
+    pwm.ChangeDutyCycle(duty)
+
 #Take an image with PiCam @Calvin Medeira 
 #Read load sensor @pat 
 
