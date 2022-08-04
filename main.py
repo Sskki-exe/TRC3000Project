@@ -1,5 +1,6 @@
 #Spin servo @Dylan 
 import RPi.GPIO as GPIO
+import smbus
 from time import sleep
 
 gpio_num=11 #Can change??
@@ -56,45 +57,43 @@ def readLS():
      print("\n".join(measures))
 
 #Read IMU @Kaelan-------------------------------------------
+#IMU is called the MPU6050
 # Help from https://www.electronicwings.com/sensors-modules/mpu6050-gyroscope-accelerometer-temperature-sensor-module
 # https://www.electronicwings.com/raspberry-pi/mpu6050-accelerometergyroscope-interfacing-with-raspberry-pi
 # https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf
 
-import smbus            #import SMBus module of I2C
-from time import sleep          #import
 
-#some MPU6050 Registers and their Address
-PWR_MGMT_1   = 0x6B
-SMPLRT_DIV   = 0x19
-CONFIG       = 0x1A
-GYRO_CONFIG  = 0x1B
-INT_ENABLE   = 0x38
-ACCEL_XOUT_H = 0x3B
-ACCEL_YOUT_H = 0x3D
-ACCEL_ZOUT_H = 0x3F
-GYRO_XOUT_H  = 0x43
-GYRO_YOUT_H  = 0x45
-GYRO_ZOUT_H  = 0x47
+def MPU_create_registers():
+    #some MPU6050 Registers and their Address
+    global PWR_MGMT_1   = 0x6B
+    global SMPLRT_DIV   = 0x19
+    global CONFIG       = 0x1A
+    global GYRO_CONFIG  = 0x1B
+    global INT_ENABLE   = 0x38
+    global ACCEL_XOUT_H = 0x3B
+    global ACCEL_YOUT_H = 0x3D
+    global ACCEL_ZOUT_H = 0x3F
+    global GYRO_XOUT_H  = 0x43
+    global GYRO_YOUT_H  = 0x45
+    global GYRO_ZOUT_H  = 0x47
+    bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
+    global IMU_Device_Address = 0x68   # MPU6050 device address
 
-def MPU_Init():
+def MPU_Init(): #initialises the MPU6050
     #write to sample rate register
-    bus.write_byte_data(Device_Address, SMPLRT_DIV, 7)
+    bus.write_byte_data(IMU_Device_Address, SMPLRT_DIV, 7)
 
     #Write to power management register
-    bus.write_byte_data(Device_Address, PWR_MGMT_1, 1)
+    bus.write_byte_data(IMU_Device_Address, PWR_MGMT_1, 1)
 
     #Write to Configuration register
-    bus.write_byte_data(Device_Address, CONFIG, 0)
+    bus.write_byte_data(IMU_Device_Address, CONFIG, 0)
 
     #Write to Gyro configuration register
-    bus.write_byte_data(Device_Address, GYRO_CONFIG, 24)
+    bus.write_byte_data(IMU_Device_Address, GYRO_CONFIG, 24)
 
     #Write to interrupt enable register
-    bus.write_byte_data(Device_Address, INT_ENABLE, 1)
-
-bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
-Device_Address = 0x68   # MPU6050 device address
-
+    bus.write_byte_data(IMU_Device_Address, INT_ENABLE, 1)
     
 def read_raw_data(addr):
     #The data straight from the MPU6050 is in 2 8bit words. Combine them to get the raw value
@@ -113,13 +112,13 @@ def read_raw_data(addr):
 def getValue(variable):
     #Outputs the value we should be using
     
-    g = 9.80665 #Newton/kg
     accel_scale_factor = 16384 #corresponds to acceleration sensitivity of +- 2 gforce
     ang_vel_scale_factor = 131 #corresponds to gyroscope sensitivity of +-250 degrees/s
+    
     #determine whether acceleration or tilting
     if (variable==ACCEL_XOUT_H || variable == ACCEL_YOUT_H || variable == ACCEL_ZOUT_H):
         return read_raw_data(variable)/accel_scale_factor
-        #returns value in g force
+        #returns value in g force which is m/s^2
     elif (variable==GYRO_XOUT_H || variable == GYRO_YOUT_H || variable == GYRO_ZOUT_H):
         return read_raw_data(variable) /ang_vel_scale_factor
         #returns value in degrees/second
