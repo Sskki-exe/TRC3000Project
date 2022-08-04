@@ -3,8 +3,8 @@ import time
 import RPi.GPIO as GPIO
 from time import sleep
 from HX711 import *
-#Spin servo @Dylan 
 import smbus            #import SMBus module of I2C
+#Spin servo @Dylan 
 
 servo_pin=11 #Can change??
 
