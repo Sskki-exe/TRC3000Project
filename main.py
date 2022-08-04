@@ -39,13 +39,22 @@ def camera_picture():
 
 compensation = 0
 def readLS():
-from HX711 import *
-hx = SimpleHX711(2, 3, -370, -367471)
-hx.zero()
-  return (hx.weight(35))
-#Calibrate load sensor @Harry 
-def calibrateLS():
-    compensation = readLS()
+  from hx711 import HX711
+
+    try:
+        hx711 = HX711(
+            dout_pin=5,
+            pd_sck_pin=6,
+            channel='A',
+            gain=64
+        )
+
+        hx711.reset()   # Before we start, reset the HX711 (not obligate)
+        measures = hx711.get_raw_data(num_measures=3)
+    finally:
+        GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
+
+    print("\n".join(measures))
 
 #Read IMU @Kaelan-------------------------------------------
 # Help from https://www.electronicwings.com/sensors-modules/mpu6050-gyroscope-accelerometer-temperature-sensor-module
