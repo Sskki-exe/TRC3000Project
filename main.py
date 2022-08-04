@@ -65,21 +65,22 @@ def readLS():
 
 def MPU_create_registers():
     #some MPU6050 Registers and their Address
-    global PWR_MGMT_1   = 0x6B
-    global SMPLRT_DIV   = 0x19
-    global CONFIG       = 0x1A
-    global GYRO_CONFIG  = 0x1B
-    global INT_ENABLE   = 0x38
-    global ACCEL_XOUT_H = 0x3B
-    global ACCEL_YOUT_H = 0x3D
-    global ACCEL_ZOUT_H = 0x3F
-    global GYRO_XOUT_H  = 0x43
-    global GYRO_YOUT_H  = 0x45
-    global GYRO_ZOUT_H  = 0x47
-    bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
-    global IMU_Device_Address = 0x68   # MPU6050 device address
+    global PWR_MGMT_1, SMPLRT_DIV, CONFIG, GYRO_CONFIG, INT_ENABLE, ACCEL_XOUT_H, ACCEL_YOUT_H, ACCEL_ZOUT_H, GYRO_XOUT_H, GYRO_YOUT_H, GYRO_ZOUT_H, IMU_Device_Address
+    PWR_MGMT_1   = 0X6B
+    SMPLRT_DIV   = 0X19
+    CONFIG       = 0X1A
+    GYRO_CONFIG  = 0X1B
+    INT_ENABLE   = 0X38
+    ACCEL_XOUT_H = 0X3B
+    ACCEL_YOUT_H = 0X3D
+    ACCEL_ZOUT_H = 0X3F
+    GYRO_XOUT_H  = 0X43
+    GYRO_YOUT_H  = 0X45
+    GYRO_ZOUT_H  = 0X47
+    IMU_Device_Address = 0x68   # MPU6050 device address
 
 def MPU_Init(): #initialises the MPU6050
+    bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
     #write to sample rate register
     bus.write_byte_data(IMU_Device_Address, SMPLRT_DIV, 7)
 
@@ -116,15 +117,14 @@ def getValue(variable):
     ang_vel_scale_factor = 131 #corresponds to gyroscope sensitivity of +-250 degrees/s
     
     #determine whether acceleration or tilting
-    if (variable==ACCEL_XOUT_H || variable == ACCEL_YOUT_H || variable == ACCEL_ZOUT_H):
+    if (variable==ACCEL_XOUT_H or variable == ACCEL_YOUT_H or variable == ACCEL_ZOUT_H):
         return read_raw_data(variable)/accel_scale_factor
         #returns value in g force which is m/s^2
-    elif (variable==GYRO_XOUT_H || variable == GYRO_YOUT_H || variable == GYRO_ZOUT_H):
+    elif (variable==GYRO_XOUT_H or variable == GYRO_YOUT_H or variable == GYRO_ZOUT_H):
         return read_raw_data(variable) /ang_vel_scale_factor
         #returns value in degrees/second
     else:
         print("Variable not suitable for function")
         #if we reach a variable not meant for this function
-        
 
 #Process image
