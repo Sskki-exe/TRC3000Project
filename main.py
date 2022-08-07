@@ -2,6 +2,7 @@
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
+from hx711 import HX711
 
 gpio_num=11 #Can change??
 
@@ -39,22 +40,18 @@ def camera_picture():
 
 
 def readLS():
-  from hx711 import HX711
+hx = HX711(5, 6)
+hx.set_reading_format("MSB", "MSB")
+hx.set_reference_unit(referenceUnit)
 
-   
-        hx711 = HX711(
-            dout_pin=5,
-            pd_sck_pin=6,
-            channel='A',
-            gain=64
-        )
+hx.reset()
 
-        hx711.reset()   # Before we start, reset the HX711 (not obligate)
-        measures = hx711.get_raw_data(num_measures=3)
- 
-        GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
+hx.tare()
 
-     print("\n".join(measures))
+print("Tare done! Add weight now...")
+val = hx.get_weight(5)
+print(val)
+
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
