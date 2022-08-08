@@ -3,12 +3,26 @@ import RPi.GPIO as GPIO
 import smbus
 from time import sleep
 from hx711 import HX711
-from gpiozero.pins.pigpio import PiGPIOFactory
+
+
+servo_pin=11
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(servo_pin, GPIO.OUT)
+pwm=GPIO.PWM(servo_pin, 50) #Second parameter = freq.
+pwm.start(0)
+def setAngle(angle):
+    duty = angle / 18 + 3
+    GPIO.output(servo_pin, True)
+    pwm.ChangeDutyCycle(duty)
+    sleep(1)
+    pwm.ChangeDutyCycle(0)
+    GPIO.output(servo_pin, False)
+
 
 # sudo pigpiod
-servo_pin=11 #Can change??
-servo=Servo(servo_pin, pin_factory=factory)
-
+#from gpiozero.pins.pigpio import PiGPIOFactory
+#servo=Servo(servo_pin, pin_factory=factory)
 #servo.min()
 #servo.max()
 #servo.mid()
