@@ -3,21 +3,17 @@ import RPi.GPIO as GPIO
 import smbus
 from time import sleep
 from hx711 import HX711
+from gpiozero.pins.pigpio import PiGPIOFactory
 
-gpio_num=11 #Can change??
+# sudo pigpiod
+servo_pin=11 #Can change??
+servo=Servo(servo_pin, pin_factory=factory)
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(gpio_num, GPIO.OUT)
-pwm=GPIO.PWM(gpio_num, 50) #Second parameter = freq.
-pwm.start(0)
+#servo.min()
+#servo.max()
+#servo.mid()
 
-def setAngle(angle):
-    duty = angle / 18 + 3
-    GPIO.output(gpio_num, True)
-    pwm.ChangeDutyCycle(duty)
-    sleep(1)
-    GPIO.output(gpio_num, False)
-    pwm.ChangeDutyCycle(duty)
+
 
 #Take an image with PiCam @Calvin Medeira 
 import picamera
