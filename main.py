@@ -11,6 +11,9 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm=GPIO.PWM(servo_pin, 50) #Second parameter = freq.
 pwm.start(0)
+
+currentAngle=0
+
 def setAngle(angle):
     duty = angle / 18 + 3
     GPIO.output(servo_pin, True)
@@ -18,6 +21,15 @@ def setAngle(angle):
     sleep(1)
     pwm.ChangeDutyCycle(0)
     GPIO.output(servo_pin, False)
+    currentAngle=angle
+
+def moveServo(angle, steps,delay):
+    stepSize=(angle-currentAngle)/steps
+    for i in range(1,steps+1):
+        setAngle(currentAngle+stepSize*i)
+        sleep(delay)
+
+    currentAngle=angle
 
 
 # sudo pigpiod
