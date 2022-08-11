@@ -1,8 +1,13 @@
 #Spin servo @Dylan 
+from email.mime import image
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
 from hx711 import HX711
+import picamera
+import cv2
+import numpy as np
+from sklearn.cluster import KMeans
 
 
 servo_pin=11
@@ -41,38 +46,89 @@ def moveServo(angle, steps,delay):
 
 
 
-#Take an image with PiCam @Calvin Medeira 
-import picamera
-import time
-picture_number = 0
-def camera_picture():
+# Take an image with PiCam @Calvin Medeira 
+# Ref: https://pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/
+def record_image(dir='/home/pi/Desktop/', image_name="image.jpg"):
     camera = PiCamera()
-    camera.start_preview() # Display image
-    sleep(5)               # Give time for camera to sense light levels
-    camera.capture('/home/pi/Desktop/image%s.jpg', picture_number) # Save picture on desktop
-    picture_number += 1
-    camera.stop_preview()  # Close image
+    #camera.start_preview() # Display image
+    #sleep(5)               # Give time for camera to sense light levels
+    camera.capture(dir + image_name) # Save picture on desktop
+    #camera.stop_preview()  # Close image
 
+## Image processing
+
+# Determines average color of an image
+# Refs: https://www.delftstack.com/howto/python/opencv-average-color-of-image/#:~:text=NumPy%20in%20Python.-,Use%20the%20average()%20Function%20of%20NumPy%20to%20Find%20the,the%20total%20number%20of%20elements.
+def average_color(path="/home/pi/Desktop/image.jpg"):
+    # Read image and store it in a matrix of RGB triplet values
+    img = cv2.imread(path)
+    # Find average of rgb values of matrix
+    average_color_row = np.average(img, axis=0)
+    average_color = np.average(average_color_row, axis=0)
+    print(average_color)
+
+    # Dispaly image of average color
+    display_avg_color = np.ones((312, 312, 3), dtype=np.unit8)
+    display_avg_color[:, :] = average_color
+
+    cv2.imshow('Source image', img)
+    cv2.imshow('Average Color', display_avg_color)
+    #cv2.waitKey(0)
+
+
+# Determines dominant color of an image
+# ref: https://www.delftstack.com/howto/python/opencv-average-color-of-image/#:~:text=NumPy%20in%20Python.-,Use%20the%20average()%20Function%20of%20NumPy%20to%20Find%20the,the%20total%20number%20of%20elements.
+def dominant_color(path="/home/pi/Desktop/image.jpg"):
+    # Load image
+    image = cv2.imread(path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    reshape_img = image.reshape((image.shape[0] * image.shape[1], 3))
+
+    # Display dominant colors Present in the image
+    KM_cluster = KMeans(n_clusters=5).fit(reshape_img)
+    C_labels = np.arange(0, len(np.unique(KM_cluster.labels_)) + 1)
+    (C_hist, _) = np.histogram(KM_cluster.labels_, bins = C_labels)
+    C_hist = C_hist.astype("float")
+    C_hist /= C_hist.sum()
+
+    rect_color = np.zeros((50, 300, 3), dtype=np.uint8)
+    img_colors = sorted([(percent, color) for (percent, color) in zip(C_hist, KM_cluster.cluster_centers_)])
+    start = 0
+    for (percent, color) in img_colors:
+        print(color, "{:0.2f}%".format(percent * 100))
+        end = start + (percent * 300)
+        cv2.rectangle(rect_color, (int(start), 0), (int(end), 50), \
+                      color.astype("uint8").tolist(), -1)
+        start = end
+    
+    rect_color = cv2.cvtColor(rect_color, cv2.COLOR_RGB2BGR)
+    cv2.imshow('visualize_Color', rect_color)
+    cv2.waitKey()
+
+
+# Checks for color change
+def color_change():
+    pass
+
+    
 
 #Read load sensor @pat 
 
 # must do "pip install hx711-rpi-py==1.57.0" first 
 # rpi gpio has to be also installed
 
-
-
 def readLS():
-hx = HX711(5, 6)
-hx.set_reading_format("MSB", "MSB")
-hx.set_reference_unit(referenceUnit)
+    hx = HX711(5, 6)
+    hx.set_reading_format("MSB", "MSB")
+    hx.set_reference_unit(referenceUnit)
 
-hx.reset()
+    hx.reset()
 
-hx.tare()
+    hx.tare()
 
-print("Tare done! Add weight now...")
-val = hx.get_weight(5)
-print(val)
+    print("Tare done! Add weight now...")
+    val = hx.get_weight(5)
+    print(val)
 
 
 #Read IMU @Kaelan-------------------------------------------
@@ -145,5 +201,3 @@ def getValue(variable):
     else:
         print("Variable not suitable for function")
         #if we reach a variable not meant for this function
-
-#Process image
