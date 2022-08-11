@@ -3,7 +3,7 @@ from email.mime import image
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
-from hx711 import HX711
+from HX711 import *
 import picamera
 import cv2
 import numpy as np
@@ -118,18 +118,14 @@ def color_change():
 # rpi gpio has to be also installed
 
 def readLS():
-    hx = HX711(5, 6)
-    hx.set_reading_format("MSB", "MSB")
-    hx.set_reference_unit(referenceUnit)
+    hx = SimpleHX711(2, 3, -370, -367471)
 
-    hx.reset()
+    # set the scale to output weights in ounces
+    hx.setUnit(Mass.Unit.OZ)
 
-    hx.tare()
+    # constantly output weights using the median of 35 samples
 
-    print("Tare done! Add weight now...")
-    val = hx.get_weight(5)
-    print(val)
-
+    print(hx.weight(35)) #eg. 1.08 oz
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
