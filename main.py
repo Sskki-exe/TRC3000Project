@@ -151,7 +151,9 @@ def MPU_create_registers():
     IMU_Device_Address = 0x68   # MPU6050 device address
 
 def MPU_Init(): #initialises the MPU6050
+    global bus
     bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
+    #If not working solve by https://github.com/johnbryanmoore/VL53L0X_rasp_python/issues/13
     #write to sample rate register
     bus.write_byte_data(IMU_Device_Address, SMPLRT_DIV, 7)
 
@@ -170,8 +172,8 @@ def MPU_Init(): #initialises the MPU6050
 def read_raw_data(addr):
     #The data straight from the MPU6050 is in 2 8bit words. Combine them to get the raw value
     #Accelero and Gyro value are 16-bit
-    high = bus.read_byte_data(Device_Address, addr)
-    low = bus.read_byte_data(Device_Address, addr+1)
+    high = bus.read_byte_data(IMU_Device_Address, addr)
+    low = bus.read_byte_data(IMU_Device_Address, addr+1)
 
     #concatenate higher and lower value
     value = ((high << 8) | low)
@@ -197,3 +199,7 @@ def getValue(variable):
     else:
         print("Variable not suitable for function")
         #if we reach a variable not meant for this function
+        
+def MPU_test(numTimes):
+    for x in range(numTimes):
+        print(x," ",getValue(ACCEL_XOUT_H)," ",getValue(ACCEL_YOUT_H)," ",getValue(ACCEL_ZOUT_H)," ",getValue(GYRO_XOUT_H)," ",getValue(GYRO_YOUT_H)," ",getValue(GYRO_ZOUT_H))
