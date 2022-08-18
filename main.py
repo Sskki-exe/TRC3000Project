@@ -127,14 +127,14 @@ def color_change():
 # rpi gpio has to be also installed
 
 def readLS():
-    hx = SimpleHX711(2, 3, -370, -367471)
+    hx = SimpleHX711(2, 3, -370, -367471) # gpio data pin 2 gpio pin 3  for clock -370 refrence and -37756 offset
 
-    # set the scale to output weights in ounces
-    hx.setUnit(Mass.Unit.OZ)
+    # set the scale to output weights in grams
+    hx.setUnit(Mass.Unit.g)
 
-    # constantly output weights using the median of 35 samples
+    #  output weights using the median of 35 samples
 
-    print(hx.weight(35)) #eg. 1.08 oz
+    return hx.weight(35)  #e
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
