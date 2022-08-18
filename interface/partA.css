@@ -23,12 +23,22 @@ body{
     background-color:white;
     margin-left: 6px;
     margin-right: 6px;
-    height: calc((93vh - 100px));
+    height: calc((93vh - 140px));
+    border-radius: 25px;
+    padding: 25px;
 }
-
+.title{
+  border-radius: 15px;
+  padding: 15px;
+  background-color:white;
+  text-align: center;
+  width:max-content;
+  margin-left:auto;
+  margin-right: auto;
+}
 .centre {
     text-align: center;
-    border: none;
+    align-items: center;
 }
 
 input{
@@ -58,9 +68,6 @@ image {
         font-size: large;
         display: block;
         text-align: center;
-    }
-    button{
-        
     }
 }
 
