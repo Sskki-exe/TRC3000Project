@@ -20,6 +20,9 @@ pwm.start(0)
 currentAngle=0
 
 def setAngle(angle):
+    """angle: Desired angle of the servo [0, 180]\n
+    setAngle sets the angle of the servo
+    """
     duty = angle / 18 + 3
     GPIO.output(servo_pin, True)
     pwm.ChangeDutyCycle(duty)
@@ -28,7 +31,13 @@ def setAngle(angle):
     GPIO.output(servo_pin, False)
     currentAngle=angle
 
+
 def moveServo(angle, steps,delay):
+    """angle: Desired angle of the servo [0, 180]\n
+    steps: Number of steps towards final position\n
+    delay: Delay between steps (seconds)\n
+    moveServo allows the change of angle in the Servo over time with a finite number of steps
+    """
     stepSize=(angle-currentAngle)/steps
     for i in range(1,steps+1):
         setAngle(currentAngle+stepSize*i)
