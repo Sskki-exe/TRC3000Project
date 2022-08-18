@@ -142,7 +142,10 @@ def readLS():
 
 
 def MPU_create_registers():
-    """some MPU6050 Registers and their Address"""
+    """
+    Title: MPU6050 Inertia Measurement Unit Register Creation
+    Description: This function creates a set of global variables that correspond to the registers for the MPU6050
+    """
     global PWR_MGMT_1, SMPLRT_DIV, CONFIG, GYRO_CONFIG, INT_ENABLE, ACCEL_XOUT_H, ACCEL_YOUT_H, ACCEL_ZOUT_H, GYRO_XOUT_H, GYRO_YOUT_H, GYRO_ZOUT_H, IMU_Device_Address
     PWR_MGMT_1   = 0X6B
     SMPLRT_DIV   = 0X19
@@ -158,7 +161,10 @@ def MPU_create_registers():
     IMU_Device_Address = 0x68   # MPU6050 device address
 
 def MPU_Init(): 
-    """initialises the MPU6050"""
+    """
+    Title: MPU6050 Intertia Measurement Unit Initialiser
+    Description: This function initialises the MPU6050 such that the relevant registers are written to and can be read
+    """
     global bus
     bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
     #If not working solve by https://github.com/johnbryanmoore/VL53L0X_rasp_python/issues/13
@@ -177,7 +183,13 @@ def MPU_Init():
     #Write to interrupt enable register
     bus.write_byte_data(IMU_Device_Address, INT_ENABLE, 1)
     
-def read_raw_data(addr):
+def MPU_read_raw_data(addr):
+    """
+    Title: MPU6050 Inertia Measurement Unit Raw data Reader
+    Description: This function reads the raw data given from the MPU6050. The MPU6050 outputs a 16 bit value given from two 8 bit words registers. This function reads those and combines them to output a signed unscaled 16 bit value.
+    Inputs: addr - corresponds to the variable/register we are retrieving the value of. This is the acceleration of or rotation about x,y or z axis.
+    Outputs: value - Outputs the signed unscaled value read from the MPU6050 for the given input
+    """
     #The data straight from the MPU6050 is in 2 8bit words. Combine them to get the raw value
     #Accelero and Gyro value are 16-bit
     high = bus.read_byte_data(IMU_Device_Address, addr)
@@ -191,26 +203,37 @@ def read_raw_data(addr):
             value = value - 65536
     return value
 
-def getValue(variable):
-    """Outputs the value we should be using"""
+def MPU_getValue(variable):
+    """
+    Title: MPU6050 Get Value
+    Description: THis function obtains the scaled signed value for a given variable input
+    Inputs: variable - corresponds to variable/register we are retriving the value of. This is the acceleration of, or rotation about the x,y or z axis.
+    Outputs: Returns the scaled signed value for the given variable outputed by the MPU6050
+    """
     
     accel_scale_factor = 16384 #corresponds to acceleration sensitivity of +- 2 gforce
     ang_vel_scale_factor = 131 #corresponds to gyroscope sensitivity of +-250 degrees/s
     
     #determine whether acceleration or tilting
     if (variable==ACCEL_XOUT_H or variable == ACCEL_YOUT_H or variable == ACCEL_ZOUT_H):
-        return read_raw_data(variable)/accel_scale_factor
+        return MPU_read_raw_data(variable)/accel_scale_factor
         #returns value in g force which is m/s^2
     elif (variable==GYRO_XOUT_H or variable == GYRO_YOUT_H or variable == GYRO_ZOUT_H):
-        return read_raw_data(variable) /ang_vel_scale_factor
+        return MPU_read_raw_data(variable) /ang_vel_scale_factor
         #returns value in degrees/second
     else:
         print("Variable not suitable for function")
         #if we reach a variable not meant for this function
         
 def MPU_test(numTimes):
+    """
+    Title: MPU6050 Tester
+    Description: This function is a testing function used to output the 6 possible values expected from the MPU6050. It loops it a set number of times and prints the 6 values to the screen in order of
+        AccelerationX  AccelerationY  AccelerationZ RotationX   RotationY   RotationZ
+    Inputs: numTimes - the number of times we print values to the console
+    """
     for x in range(numTimes):
-        print(x," ",getValue(ACCEL_XOUT_H)," ",getValue(ACCEL_YOUT_H)," ",getValue(ACCEL_ZOUT_H)," ",getValue(GYRO_XOUT_H)," ",getValue(GYRO_YOUT_H)," ",getValue(GYRO_ZOUT_H))
+        print(x," ",MPU_getValue(ACCEL_XOUT_H)," ",MPU_getValue(ACCEL_YOUT_H)," ",MPU_getValue(ACCEL_ZOUT_H)," ",MPU_getValue(GYRO_XOUT_H)," ",MPU_getValue(GYRO_YOUT_H)," ",MPU_getValue(GYRO_ZOUT_H))
 
 
 
