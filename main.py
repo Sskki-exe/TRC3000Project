@@ -10,14 +10,13 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 
-servo_pin=11
+servo_pin=11 #Signal pin for servo
+currentAngle=0 #Initial Angle
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm=GPIO.PWM(servo_pin, 50) #Second parameter = freq.
 pwm.start(0)
-
-currentAngle=0
 
 def setAngle(angle):
     """angle: Desired angle of the servo [0, 180]\n
@@ -26,12 +25,11 @@ def setAngle(angle):
     duty = angle / 18 + 3
     GPIO.output(servo_pin, True)
     pwm.ChangeDutyCycle(duty)
-    sleep(1)
+    sleep(0.2)
     pwm.ChangeDutyCycle(0)
     GPIO.output(servo_pin, False)
     currentAngle=angle
-
-
+setAngle(currentAngle) #Ensures starting at initial angle
 def moveServo(angle, steps,delay):
     """angle: Desired angle of the servo [0, 180]\n
     steps: Number of steps towards final position\n
@@ -144,7 +142,7 @@ def readLS():
 
 
 def MPU_create_registers():
-    #some MPU6050 Registers and their Address
+    """some MPU6050 Registers and their Address"""
     global PWR_MGMT_1, SMPLRT_DIV, CONFIG, GYRO_CONFIG, INT_ENABLE, ACCEL_XOUT_H, ACCEL_YOUT_H, ACCEL_ZOUT_H, GYRO_XOUT_H, GYRO_YOUT_H, GYRO_ZOUT_H, IMU_Device_Address
     PWR_MGMT_1   = 0X6B
     SMPLRT_DIV   = 0X19
@@ -159,7 +157,8 @@ def MPU_create_registers():
     GYRO_ZOUT_H  = 0X47
     IMU_Device_Address = 0x68   # MPU6050 device address
 
-def MPU_Init(): #initialises the MPU6050
+def MPU_Init(): 
+    """initialises the MPU6050"""
     global bus
     bus = smbus.SMBus(1)     # or bus = smbus.SMBus(0) for older version boards
     #If not working solve by https://github.com/johnbryanmoore/VL53L0X_rasp_python/issues/13
@@ -193,7 +192,7 @@ def read_raw_data(addr):
     return value
 
 def getValue(variable):
-    #Outputs the value we should be using
+    """Outputs the value we should be using"""
     
     accel_scale_factor = 16384 #corresponds to acceleration sensitivity of +- 2 gforce
     ang_vel_scale_factor = 131 #corresponds to gyroscope sensitivity of +-250 degrees/s
@@ -212,3 +211,8 @@ def getValue(variable):
 def MPU_test(numTimes):
     for x in range(numTimes):
         print(x," ",getValue(ACCEL_XOUT_H)," ",getValue(ACCEL_YOUT_H)," ",getValue(ACCEL_ZOUT_H)," ",getValue(GYRO_XOUT_H)," ",getValue(GYRO_YOUT_H)," ",getValue(GYRO_ZOUT_H))
+
+
+
+
+
