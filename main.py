@@ -3,11 +3,12 @@ from email.mime import image
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
-from HX711 import *
+from hx711 import HX711
 import picamera
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
+import sys
 
 
 servo_pin=11 #Signal pin for servo
@@ -124,15 +125,45 @@ def color_change():
 # must do "pip install hx711-rpi-py==1.57.0" first 
 # rpi gpio has to be also installed
 
+def cleanAndExit():
+    print("Cleaning...")
+
+
+    GPIO.cleanup()
+            
+    print("Bye!")
+    sys.exit()
+
+# ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 def readLS():
-    hx = SimpleHX711(2, 3, -370, -367471) # gpio data pin 2 gpio pin 3  for clock -370 refrence and -37756 offset
+    
+    referenceUnit = 8882
+    hx = HX711(5, 6)
+    hx.set_reading_format("MSB", "LSB")
+    hx.set_reference_unit(referenceUnit)
+    hx.reset()
+    hx.tare()
 
-    # set the scale to output weights in grams
-    hx.setUnit(Mass.Unit.g)
+    print("Tare done! Add weight now...")
 
-    #  output weights using the median of 35 samples
+    # to use both channels, you'll need to tare them both
+    #hx.tare_A()
+    #hx.tare_B()
 
-    return hx.weight(35)  #e
+    for i in range(10):
+        try:
+
+            val = hx.get_weight(5)
+            print(val)
+
+
+            hx.power_down()
+            hx.power_up()
+            sleep(0.1)
+
+        except (KeyboardInterrupt, SystemExit):
+            cleanAndExit()
+
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
