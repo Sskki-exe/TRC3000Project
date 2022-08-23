@@ -122,9 +122,8 @@ def color_change():
 
 #Read load sensor @pat 
 
-# must do "pip install hx711-rpi-py==1.57.0" first 
-# rpi gpio has to be also installed
 
+# this function is used to clean up LS after use
 def cleanAndExit():
     print("Cleaning...")
 
@@ -138,18 +137,14 @@ def cleanAndExit():
 def readLS():
     
     referenceUnit = 8882
-    hx = HX711(5, 6)
+    hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5
     hx.set_reading_format("MSB", "LSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
-    hx.tare()
+    hx.tare() # tare the scale 
 
     print("Tare done! Add weight now...")
-
-    # to use both channels, you'll need to tare them both
-    #hx.tare_A()
-    #hx.tare_B()
-
+# print 10 diffrent weights
     for i in range(10):
         try:
 
