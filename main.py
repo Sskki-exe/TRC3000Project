@@ -265,3 +265,23 @@ def MPU_test(numTimes):
 
 
 
+#Acceleration test
+#NOT COMPLETE
+def accelerationTest(lowerTol,sampleTol,initialSteps,initialDelay)
+    """
+    lowerTol: Amount of weight before "something" is detected
+    sampleTol: Lower tolerance of the sample weight
+    initialSteps: Amount of steps to intially use
+    initialDelay: Length of delay between steps
+
+    returns the maximum acceleration of the sample until the sample falls off
+    """
+    while readLS()<lowerTol:
+        sleep(1)
+    sampleWeight=readLS()-sampleTol
+    while readLS()>sampleWeight:
+        moveServo(180,initialSteps,initialDelay)
+        initialDelay=initialDelay-1
+
+
+    
