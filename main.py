@@ -133,15 +133,7 @@ def tareLS():
     hx.tare() # tare the scale 
 
     print("Tare done! ")
-# this function is used to clear the hx711 load cell aplifier after use
-def cleanAndExit():
-    print("Cleaning...")
 
-
-    GPIO.cleanup()
-            
-    print("Bye!")
-    sys.exit()
 
 """
 title: read load cell
@@ -150,10 +142,6 @@ output: this function outputs the weight on the lod cell in grams
 """
 def readLS():
     
-
-# print 10 diffrent weights
-
-
     val = hx.get_weight(5)
     return val
 
@@ -161,10 +149,6 @@ def readLS():
     hx.power_down()
     hx.power_up()
     sleep(0.1)
-
-
-    cleanAndExit()
-
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
