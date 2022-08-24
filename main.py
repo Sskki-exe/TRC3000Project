@@ -125,9 +125,9 @@ def color_change():
 
 # this function is used to clean up LS after use
 
-referenceUnit = 8882
+referenceUnit = 235.78
 hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5
-hx.set_reading_format("MSB", "LSB")
+hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(referenceUnit)
 hx.reset()
 tareLS():
