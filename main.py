@@ -124,6 +124,16 @@ def color_change():
 
 
 # this function is used to clean up LS after use
+
+referenceUnit = 8882
+hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5
+hx.set_reading_format("MSB", "LSB")
+hx.set_reference_unit(referenceUnit)
+hx.reset()
+tareLS():
+    hx.tare() # tare the scale 
+
+    print("Tare done! ")
 def cleanAndExit():
     print("Cleaning...")
 
@@ -136,28 +146,20 @@ def cleanAndExit():
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 def readLS():
     
-    referenceUnit = 8882
-    hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5
-    hx.set_reading_format("MSB", "LSB")
-    hx.set_reference_unit(referenceUnit)
-    hx.reset()
-    hx.tare() # tare the scale 
 
-    print("Tare done! Add weight now...")
 # print 10 diffrent weights
-    for i in range(10):
-        try:
-
-            val = hx.get_weight(5)
-            print(val)
 
 
-            hx.power_down()
-            hx.power_up()
-            sleep(0.1)
+    val = hx.get_weight(5)
+    return val
 
-        except (KeyboardInterrupt, SystemExit):
-            cleanAndExit()
+
+    hx.power_down()
+    hx.power_up()
+    sleep(0.1)
+
+
+    cleanAndExit()
 
 
 #Read IMU @Kaelan-------------------------------------------
