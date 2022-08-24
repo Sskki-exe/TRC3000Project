@@ -121,19 +121,19 @@ def color_change():
     
 
 #Read load sensor @pat 
-
-
-# this function is used to clean up LS after use
-
-referenceUnit = 235.78
-hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5
+# ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
+# 
+referenceUnit = 235.78 # refrence unit has been obtained using a known weight 
+hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and 
 hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(referenceUnit)
 hx.reset()
-tareLS():
+# this function is used to tare the load cell 
+def tareLS():
     hx.tare() # tare the scale 
 
     print("Tare done! ")
+# this function is used to clear the hx711 load cell aplifier after use
 def cleanAndExit():
     print("Cleaning...")
 
@@ -143,7 +143,11 @@ def cleanAndExit():
     print("Bye!")
     sys.exit()
 
-# ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
+"""
+title: read load cell
+Description: thi function is used to determine weight on the load cell
+output: this function outputs the weight on the lod cell in grams
+"""
 def readLS():
     
 
