@@ -6,10 +6,16 @@ from sklearn.cluster import KMeans
 
 # Take an image with PiCam @Calvin Medeira 
 # Ref: https://pyimagesearch.com/2015/03/30/accessing-the-raspberry-pi-camera-with-opencv-and-python/
-def record_image():
+def record_image(path="image.jpg"):
+    """
+    Title: WebCam record image
+    Description: This function will save a picture in 
+    Inputs: addr - corresponds to the variable/register we are retrieving the value of. This is the acceleration of or rotation about x,y or z axis.
+    Outputs: value - Outputs the signed unscaled value read from the MPU6050 for the given input
+    """
     camera = cv2.VideoCapture(0)
     result, image = camera.read()
-    cv2.imwrite("image.jpg", image)
+    cv2.imwrite("image1.jpg", image)
 
 ## Image processing
 
