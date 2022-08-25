@@ -4,9 +4,7 @@
     <title>Part A</title>
     <link rel="stylesheet" href="partA.css">
 </head>
-
 <body>
-<<<<<<< HEAD
     <h1>TRC Automation Project Team 122 Test</h1>
     <h1>Part A</h1>
     <div id="Calibrate Load Cell">
@@ -23,8 +21,9 @@
                 <td><input type="number" id="amount" name="amount" value="0"></td>
             </tr>
         </table><br>
-        <button>Tare</button>
-        <button>Calibrate</button>
+        <input type="submit" name="submit_button" value="Tare">
+        <input type="submit" name="btn" value="Tare">
+        <input type="submit" name="btn" value="Calibrate">
         <h3>Usage</h3>
         <ul>
             <li>Press the "Tare" button when scale is empty</li>
@@ -44,8 +43,8 @@
                 <td><input type="number" id="actualA" name="actualA" value="0"></td>
             </tr>
         </table><br>
-        <button>Go to angle</button>
-        <button>Calibrate</button>
+        <input type="submit" name="btn" value="Go to angle">
+        <input type="submit" name="btn" value="Calibrate">
         <h3>Usage</h3>
         <ul>
             <li>Enter target angle, press "Go to angle" to send move signal to servo</li>
@@ -78,7 +77,7 @@
         </table><br>
         <label for="runIMU">Start IMU?</label>
         <input id="runIMU" name="runIMU" type="checkbox">
-        <button>Calibrate</button>
+        <input type="submit" name="btn" value="Calibrate">
         <h3>Usage</h3>
         <ul>
             <li>Toggle "Start IMU?" to start updating the table values</li>
@@ -88,15 +87,13 @@
     <div id="Record Images with Pi Camera">
         <h2>Record Images from PiCam</h2>
         <img src="image.jpg" alt="Image Not Found"></img><br>
-        <button>Take Image</button>
+        <input type="submit" name="btn" value="Take Image">
         <h3>Usage</h3>
         <ul>
             <li>Press "Take Image" to take image, lol</li>
         </ul>
-=======
     <div class="center">
         <h1 class="title">TRC3000 - Team 122</h1>
->>>>>>> f9e7b7266939bba6c4dde23297e9f68c2abc2020
     </div>
     <div class="cells backcolour">
         <div id="Calibrate Load Cell" class="quarter">
@@ -114,8 +111,8 @@
                 </tr>
             </table><br>
             <div class="centre">
-                <button>Tare</button>
-                <button>Calibrate</button>
+                <input type="submit" name="btn" value="Tare">
+                <input type="submit" name="btn" value="Calibrate">
             </div>
             <h3>Usage</h3>
             <ul>
@@ -137,8 +134,8 @@
                 </tr>
             </table><br>
             <div class="centre">
-                <button>Go to angle</button>
-                <button>Calibrate</button>
+                <input type="submit" name="btn" value="Go to angle">
+                <input type="submit" name="btn" value="Calibrate">
             </div>
             <h3>Usage</h3>
             <ul>
@@ -179,7 +176,7 @@
             </div>
             <br>
             <div class="centre">
-                <button>Calibrate</button>
+                <input type="submit" name="btn" value="Calibrate">
             </div>
             <h3>Usage</h3>
             <ul>
@@ -191,7 +188,7 @@
             <h2>Record Images from PiCam</h2>
             <image src="image.jpg" alt="Image Not Found"></image><br>
             <div class="centre">
-                <button>Capture Image</button>
+                <input type="submit" name="btn" value="Capture Image">
             </div>
             <h3>Usage</h3>
             <ul>
