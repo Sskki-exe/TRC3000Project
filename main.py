@@ -64,13 +64,11 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 # this function is used to tare the load cell 
 def calibrateLS():
-    print(" enetr known weight/n")
-    knownWeight=input()
-    print("place weight on the scale")
     tareLS()
+    print(" enter known weight and place weight on the scale")
+    knownWeight=input()
     givenWeight= readLS()
-    referenceUnit = givenWeight/knownWeight
-    hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and 
+    referenceUnit = givenWeight/floatknownWeight)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
@@ -90,12 +88,13 @@ output: this function outputs the weight on the lod cell in grams
 def readLS():
     
     val = hx.get_weight(5)
-    return val
+
 
 
     hx.power_down()
     hx.power_up()
     sleep(0.1)
+    return val
 
 #Read IMU @Kaelan-------------------------------------------
 #IMU is called the MPU6050
