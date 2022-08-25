@@ -123,12 +123,26 @@ def color_change():
 #Read load sensor @pat 
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 # 
-referenceUnit = 235.78 # refrence unit has been obtained using a known weight 
+ # refrence unit has been obtained using a known weight 
+referenceUnit = 1
 hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and 
 hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(referenceUnit)
 hx.reset()
 # this function is used to tare the load cell 
+def calibrateLS():
+    print(" enetr known weight/n")
+    knownWeight=input()
+    print("place weight on the scale")
+    tareLS()
+    givenWeight= readLS()
+    referenceUnit = givenWeight/knownWeight
+    hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and 
+    hx.set_reading_format("MSB", "MSB")
+    hx.set_reference_unit(referenceUnit)
+    hx.reset()
+
+
 def tareLS():
     hx.tare() # tare the scale 
 
