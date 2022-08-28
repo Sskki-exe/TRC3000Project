@@ -69,14 +69,14 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 
 # this function is used to tare the load cell
-def calibrateLS():
+def calibrateLS(knownWeight):
     """
     Title: Calibrate Load Cell
     Description: used initialise, tare and calibrate load cell
     """
     tareLS()
-    print(" enter known weight and place weight on the scale")
-    knownWeight=input()
+    #print(" enter known weight and place weight on the scale")
+    #knownWeight=input()
     givenWeight= readLS()
     referenceUnit = givenWeight/float(knownWeight)
     hx.set_reading_format("MSB", "MSB")

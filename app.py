@@ -1,43 +1,35 @@
+from asyncio.windows_events import NULL
 from flask import Flask, request, render_template, jsonify
-#import main
+import main
 
 app = Flask(__name__)
 
-mass=0
-tx=0
-ty=0
-tz=0
-ax=0
-ay=0
-az=0 
-
 @app.route('/getdata', methods= ['GET'])
 def stuff():
-    global mass,tx,ty,tz,ax,ay,az
-    mass+=1
-    tx+=1
-    ty+=1
-    tz+=1
-    ax+=1
-    ay+=1
-    az+=1    
+    mass = main.readLS()
+    
+    tx = 
+    ty=
+    tz=
+    ax=
+    ay=
+    az=
     return jsonify(mass=mass,tx=tx,ty=ty,tz=tz,ax=ax,ay=ay,az=az)
 
-@app.route('/partA', methods=["GET","POST"])
+@app.route('/partA', methods=["POST"])
 def partA():
     if request.method == "POST":
         btn = request.form['btn']
         if btn == "Tare":
-            print(1)
+            main.tareLS()
         if btn == "Calibrate LC":
-            print(2)
+            main.calibrateLS(request.form['amount'])
         if btn == "Go to angle":
-            print(3)
+            main.setAngle(request.form['targetA'])
         if btn == "Calibrate IMU":
-            print(4)
+            main.MPU_calibrate()
         if btn == "Capture Image":
-            print(5)
-        print(request.form.get("runLS"))
+            main.takePic()
     return render_template('partA.html')
 
 if __name__ == "__main__":
