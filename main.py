@@ -5,18 +5,20 @@ from email.mime import image
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
-from hx711 import HX711
+from hx711py.hx711 import HX711
 import picamera
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
 import sys
+import math
+from datetime import datetime
 
-#Spin servo @Dylan
-servo_pin=11 #Signal pin for servo
+#Spin servo @Dylan--------------------------------------------------------
+servo_pin=17 #Signal pin for servo
 currentAngle=0 #Initial Angle
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM) #Refers to Physical Pin 11
 GPIO.setup(servo_pin, GPIO.OUT)
 pwm=GPIO.PWM(servo_pin, 50) #Second parameter = freq.
 pwm.start(0)
@@ -25,6 +27,7 @@ def setAngle(angle):
     """angle: Desired angle of the servo [0, 180]\n
     setAngle sets the angle of the servo
     """
+    global servo_pin, currentAngle
     duty = angle / 18 + 3
     GPIO.output(servo_pin, True)
     pwm.ChangeDutyCycle(duty)
@@ -55,22 +58,27 @@ def moveServo(angle, steps,delay):
 #servo.mid()
 
 
-#Read load sensor @pat 
+#Read load sensor @pat ------------------------------------------------------------------------------
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
-#
- # reference unit has been obtained using a known weight
+# reference unit has been obtained using a known weight
+
 referenceUnit = 1
-hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and 
+hx = HX711(5, 6) # data is connected to pin 6 and sck to pin 5 and
 hx.set_reading_format("MSB", "MSB")
 hx.set_reference_unit(referenceUnit)
 hx.reset()
-# this function is used to tare the load cell 
+
+# this function is used to tare the load cell
 def calibrateLS():
+    """
+    Title: Calibrate Load Cell
+    Description: used initialise, tare and calibrate load cell
+    """
     tareLS()
     print(" enter known weight and place weight on the scale")
     knownWeight=input()
     givenWeight= readLS()
-    referenceUnit = givenWeight/floatknownWeight)
+    referenceUnit = givenWeight/float(knownWeight)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
@@ -82,7 +90,7 @@ def tareLS():
     Description: thi function is used to determine weight on the load cell
     output: this function outputs the weight on the lod cell in grams
     """
-    hx.tare() # tare the scale 
+    hx.tare() # tare the scale
 
     print("Tare done! ")
 
@@ -95,7 +103,7 @@ def readLS():
     sleep(0.1)
     return val
 
-#Read IMU @Kaelan-------------------------------------------
+#Read IMU @Kaelan-----------------------------------------------------------------------------------------------------------
 #IMU is called the MPU6050
 # Help from https://www.electronicwings.com/sensors-modules/mpu6050-gyroscope-accelerometer-temperature-sensor-module
 # https://www.electronicwings.com/raspberry-pi/mpu6050-accelerometergyroscope-interfacing-with-raspberry-pi
@@ -309,9 +317,34 @@ def MPU_test(numTimes):
             print('{0:8} {1:8} {2:8} {3:8} {4:8} {5:8} {6:8} {7:8}'.format(MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_getValue('wX'),MPU_getValue('wY'),MPU_getValue('wZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]))
 
 #--------------------------------------------------
+#Acess USB Camera since PiCamera Port is broken on our RaspberryPi
+cam = cv2.VideoCapture(0) #allows us to take photos using the USB Camera
+
+def takePic():
+    """
+    Title: Take Picture
+    Description: This function uses the usb camera we have connected to the raspberry pi and uses it to take photos. We are only using the usb webcam because the camera port on our raspberry pi is damaged and does not work
+    Outputs: Does not return anything from function. However places a photo with current date and time into a folder called ProjectPics
+    """
+    global cam #ensure uses global variable
+    now = datetime.now()
+    print('Taking Photo')
+    while True:
+        ret,image = cam.read() #read the image and save it 'image'
+        #cv2.imshow('ImageTest',image) #display photo
+        #Code to ensure that the photos are correctly taken
+        k = cv2.waitKey(1)
+        if k!=1:
+            break
+    cv2.imwrite(('/home/raspberry/ProjectPics/'+now.strftime("%Y-%m-%d_%H:%M")+'.jpg'),image) #save photo to specified folder with current date and time
+    cam.release() #stop using camera
+    #cv2.destroyAllWindows() #destroy window displaying photo
+    print('Photo taken and saved successfully')
+
+#--------------------------------------------------
 #Acceleration test
 #NOT COMPLETE
-def accelerationTest(lowerTol,sampleTol,initialSteps,initialDelay)
+def accelerationTest(lowerTol,sampleTol,initialSteps,initialDelay):
     """
     lowerTol: Amount of weight before "something" is detected
     sampleTol: Lower tolerance of the sample weight
