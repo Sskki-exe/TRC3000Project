@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
+
+    <script>
+        function update_values() {
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $.getJSON($SCRIPT_ROOT + "/getdata",
+            function(data) {
+                $("#tval").text(data.one);
+            });
+        };
+    </script>
+</head>
+<body>
+    Value: <span id="tval">0</span>
+    <button onclick="update_values()">update</button>
+</body>
+
+
+</html>

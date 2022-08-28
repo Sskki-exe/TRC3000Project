@@ -24,10 +24,10 @@ body{
     background-color:white;
     margin-left: 6px;
     margin-right: 6px;
-    height: calc((93vh - 140px));
     border-radius: 25px;
     padding: 25px;
 }
+
 .title{
   border-radius: 15px;
   padding: 15px;
@@ -43,8 +43,8 @@ body{
     align-items: center;
 }
 
-input{
-    width:30px;
+input[type="number"]{
+    width:60px;
 }
 
 .cells{
@@ -55,22 +55,6 @@ input{
 image {
     max-width: 400px;
     max-height: 400px;
-}
-
-@media (pointer:none), (pointer:coarse) {
-    .quarter{
-        display: block;
-        width: calc(100%);
-        height: auto;
-        /*height: calc((93vh - 100px)/4);*/
-        min-height: 200px;
-        margin-bottom:6px;
-    }
-    .cells{
-        font-size: large;
-        display: block;
-        text-align: center;
-    }
 }
 
 /* The switch - the box around the slider */
