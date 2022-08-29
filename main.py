@@ -13,49 +13,27 @@ from sklearn.cluster import KMeans
 import sys
 import math
 from datetime import datetime
+from gpiozero import AngularServo
 
 #Spin servo @Dylan--------------------------------------------------------
-servo_pin=17 #Signal pin for servo
-currentAngle=0 #Initial Angle
-
-GPIO.setmode(GPIO.BCM) #Refers to Physical Pin 11
-GPIO.setup(servo_pin, GPIO.OUT)
-pwm=GPIO.PWM(servo_pin, 50) #Second parameter = freq.
-pwm.start(0)
-
+currentAngle = 0
 def setAngle(angle):
-    """angle: Desired angle of the servo [0, 180]\n
-    setAngle sets the angle of the servo
     """
-    global servo_pin, currentAngle
-    duty = angle / 18 + 3
-    GPIO.output(servo_pin, True)
-    pwm.ChangeDutyCycle(duty)
-    sleep(0.2)
-    pwm.ChangeDutyCycle(0)
-    GPIO.output(servo_pin, False)
-    currentAngle=angle
-setAngle(currentAngle) #Ensures starting at initial angle
-def moveServo(angle, steps,delay):
-    """angle: Desired angle of the servo [0, 180]\n
-    steps: Number of steps towards final position\n
-    delay: Delay between steps (seconds)\n
-    moveServo allows the change of angle in the Servo over time with a finite number of steps
+    Title: Set Angle
+    Description: This formula sets the angle of the servo and also updates the value of the current angle. It ranges from -90<angle<90 degrees. This utilises a PWM approach and uses the max and minimum pulse widths to alter the angles
+    Inputs: angle - The angle at which the servo will be set at
+    Outputs: currentAngle - NOT a return value, however a global variable which is updated whenever the function is called
     """
-    stepSize=(angle-currentAngle)/steps
-    for i in range(1,steps+1):
-        setAngle(currentAngle+stepSize*i)
-        sleep(delay)
-
-    currentAngle=angle
-
-
-# sudo pigpiod
-#from gpiozero.pins.pigpio import PiGPIOFactory
-#servo=Servo(servo_pin, pin_factory=factory)
-#servo.min()
-#servo.max()
-#servo.mid()
+    #Ensure we the global variable currentAngle
+    global currentAngle
+    #create the connection between servo, GPIO pin 17, and setting the minimum and maximum pulse width which dictates the angle
+    servo = AngularServo(17,min_pulse_width = 0.0006,max_pulse_width = 0.00255)
+    servo.angle = angle #set the angle
+    sleep(0.5) #give time to move the servo
+    #set instructions to an unused pin as to 'turn off' the servo and reduce jitter
+    servo = AngularServo(18,min_pulse_width = 0.001,max_pulse_width = 0.002)
+    currentAngle = angle #update current angle
+    print('Angle set to ' + angle)
 
 
 #Read load sensor @pat ------------------------------------------------------------------------------
@@ -326,15 +304,14 @@ def MPU_getOutputs():
     return MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]
 #--------------------------------------------------
 #Acess USB Camera since PiCamera Port is broken on our RaspberryPi
-cam = cv2.VideoCapture(0) #allows us to take photos using the USB Camera
-
 def takePic():
     """
     Title: Take Picture
     Description: This function uses the usb camera we have connected to the raspberry pi and uses it to take photos. We are only using the usb webcam because the camera port on our raspberry pi is damaged and does not work
     Outputs: Does not return anything from function. However places a photo with current date and time into a folder called ProjectPics
     """
-    global cam #ensure uses global variable
+    cam = cv2.VideoCapture(0) #allows us to take photos using the USB Camera
+    #global cam #ensure uses global variable
     now = datetime.now()
     print('Taking Photo')
     while True:
@@ -344,10 +321,10 @@ def takePic():
         k = cv2.waitKey(1)
         if k!=1:
             break
-    cv2.imwrite(('/home/raspberry/ProjectPics/'+now.strftime("%Y-%m-%d_%H:%M")+'.jpg'),image) #save photo to specified folder with current date and time
+    cv2.imwrite(('/home/raspberry/ProjectPics/'+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg'),image) #save photo to specified folder with current date and time
     cam.release() #stop using camera
     #cv2.destroyAllWindows() #destroy window displaying photo
-    print('Photo taken and saved successfully')
+    print('Photo taken and saved successfully under '+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg')
 
 #--------------------------------------------------
 #Acceleration test
