@@ -316,6 +316,14 @@ def MPU_test(numTimes):
         for x in range(numTimes):
             print('{0:8} {1:8} {2:8} {3:8} {4:8} {5:8} {6:8} {7:8}'.format(MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_getValue('wX'),MPU_getValue('wY'),MPU_getValue('wZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]))
 
+def MPU_getOutputs():
+    """
+    Title: MPU6050 Inertia Measurement Unit Get Outputs
+    Description: This function is used to output the user-friendly values of acceleration in gforce for th x,y and z axes. And the roll(tilt around the x axis) and the pitch (tilt of the y axis) measured in degrees
+    Outputs: returns an array of the values in order of
+                AccelerationX AccelerationY AccelerationY Roll(TiltX) Pitch(TiltY)
+    """
+    return MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]
 #--------------------------------------------------
 #Acess USB Camera since PiCamera Port is broken on our RaspberryPi
 cam = cv2.VideoCapture(0) #allows us to take photos using the USB Camera
