@@ -68,7 +68,7 @@ def calibrateLS():
     print(" enter known weight and place weight on the scale")
     knownWeight=input()
     givenWeight= readLS()
-    referenceUnit = givenWeight/floatknownWeight)
+    referenceUnit = givenWeight/float(knownWeight)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
