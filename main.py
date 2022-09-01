@@ -15,9 +15,11 @@ import math
 from datetime import datetime
 from gpiozero import AngularServo
 
+activateIMU=0
+
 #Spin servo @Dylan--------------------------------------------------------
 currentAngle = 0
-def setAngle(angle):
+def setAngle(angle,delay=0.5):
     """
     Title: Set Angle
     Description: This formula sets the angle of the servo and also updates the value of the current angle. It ranges from -90<angle<90 degrees. This utilises a PWM approach and uses the max and minimum pulse widths to alter the angles
@@ -29,13 +31,19 @@ def setAngle(angle):
     #create the connection between servo, GPIO pin 17, and setting the minimum and maximum pulse width which dictates the angle
     servo = AngularServo(17,min_pulse_width = 0.0006,max_pulse_width = 0.00255)
     servo.angle = angle #set the angle
-    sleep(0.5) #give time to move the servo
+    if(activateIMU):
+        MPU_test(1)
+    sleep(delay) #give time to move the servo
     #set instructions to an unused pin as to 'turn off' the servo and reduce jitter
     servo = AngularServo(18,min_pulse_width = 0.001,max_pulse_width = 0.002)
     currentAngle = angle #update current angle
     print('Angle set to ' + angle)
 
-
+def moveServo(angle,totalDelay):
+    stepDelay=totalDelay/100
+    stepAngle=angle/100
+    for i in range(1,100):
+        setAngle(currentAngle+stepAngle,stepDelay)
 #Read load sensor @pat ------------------------------------------------------------------------------
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 # reference unit has been obtained using a known weight
