@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Part B</title>
+    <style>
+        div {
+            border: 1px black solid;
+        }
+        table {            
+            border-collapse: collapse;
+        }
+        td,th {
+            border: 1px black solid;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>TRC Automation Project Team 122 Test</h1>
+    <h1>Part B</h1>
+    <div id="System Stability">
+        <h2>Investigations of System Stability</h2>
+        <table>
+            <tr>
+                <th rowspan="2">Fastest Turning Speed(°/s)</th>
+                <th colspan="4">Maximum Imposed Tilt</th>
+                <th colspan="4">Maximum Imposed Acceleration</th>
+            </tr>
+            <tr>
+                <th>x</th>
+                <th>y</th>
+                <th>z</th>
+                <th>Σ</th>
+                <th>x</th>
+                <th>y</th>
+                <th>z</th>
+                <th>Σ</th>
+            </tr>
+            <tr>
+                <td><span id="speed" name="speed">0</span></td>
+                <td><span id="tiltX" name="tiltX">0</span></td>
+                <td><span id="tiltY" name="tiltY">0</span></td>
+                <td><span id="tiltZ" name="tiltZ">0</span></td>
+                <td><span id="tiltS" name="tiltS">0</span></td>
+                <td><span id="accX" name="accX">0</span></td>
+                <td><span id="accY" name="accY">0</span></td>
+                <td><span id="accZ" name="accZ">0</span></td>
+                <td><span id="accS" name="accS">0</span></td>
+            </tr>
+        </table><br>
+        <button>Calibrate</button>
+        <h3>Usage</h3>
+        <ul>
+            <li>Fill flask, place on machine, press "Calibrate"</li>
+    </div>
+    <div id="Approach">
+        <h2>Approach</h2>
+        <ol>
+            <li>The machine is loaded with a full Erlemeyer flask</li>
+            <li>Start calibration by storing the current mass of the flask</li>
+            <li>Rotate servo, measuring the tilt and acceleration </li>
+        </ol>
+    </div>
+    <div id="graphs">
+        <h2>Graphs</h2>
+        <img src="sGraph.png" alt="Speed Graph">
+        <img src="tGraph.png" alt="Tilt Graph">
+        <img src="aGraph.png" alt="Acceleration Graph">
+    </div>
+</body>
+
+</html>
