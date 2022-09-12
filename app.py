@@ -31,5 +31,13 @@ def partA():
             main.takePic()
     return render_template('partA.html')
 
+@app.route('/partB', methods=["POST"])
+def partB():
+    return render_template('partB.html')
+
+@app.route('/partC', methods=["POST"])
+def partC():
+    return render_template('partC.html')
+
 if __name__ == "__main__":
     app.run()
