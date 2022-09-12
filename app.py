@@ -8,13 +8,12 @@ app = Flask(__name__)
 def stuff():
     mass = main.readLS()
     
-    tx = 
-    ty=
-    tz=
-    ax=
-    ay=
-    az=
-    return jsonify(mass=mass,tx=tx,ty=ty,tz=tz,ax=ax,ay=ay,az=az)
+    tx=main.MPU_getValue('wX')
+    ty=main.MPU_getValue('wY')
+    ax=main.MPU_getValue('aX')
+    ay=main.MPU_getValue('aY')
+    az=main.MPU_getValue('aZ')
+    return jsonify(mass=mass,tx=tx,ty=ty,ax=ax,ay=ay,az=az)
 
 @app.route('/partA', methods=["POST"])
 def partA():
