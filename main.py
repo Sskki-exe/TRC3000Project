@@ -39,11 +39,18 @@ def setAngle(angle,delay=0.5):
     currentAngle = angle #update current angle
     print('Angle set to ' + angle)
 
-def moveServo(angle,totalDelay):
-    stepDelay=totalDelay/100
-    stepAngle=angle/100
-    for i in range(1,100):
-        setAngle(currentAngle+stepAngle,stepDelay)
+def moveServo(angle,stepDelay):
+    if stepDelay<0:
+        print("Not enough delay")
+        return
+    if angle is currentAngle:
+        print("No change in angle")
+        return
+    step=1
+    if angle<currentAngle:
+        step=-1
+    for i in range(1,abs(currentAngle-angle)):
+        setAngle(currentAngle+step,stepDelay)
 #Read load sensor @pat ------------------------------------------------------------------------------
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 # reference unit has been obtained using a known weight

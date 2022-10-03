@@ -3,19 +3,26 @@
 
 <head>
     <title>Part B</title>
-    <style>
-        div {
-            border: 1px black solid;
-        }
-        table {            
-            border-collapse: collapse;
-        }
-        td,th {
-            border: 1px black solid;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
+    <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
+    <script>
+        setInterval(updateData,1000);
+        function updateData() {
+            $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+            $.getJSON($SCRIPT_ROOT + "/getdataB",
+                function (data) {
+                    $("#speed").text(data.speed);
+                    
+                    $("#tiltX").text(data.tx);
+                    $("#tiltY").text(data.ty);
+                    $("#tiltS").text(data.ts);
+
+                    $("#accX").text(data.ax);
+                    $("#accY").text(data.ay);
+                    $("#accS").text(data.as);
+                });
+        };   
+    </script>
 </head>
 
 <body>
@@ -43,15 +50,15 @@
                 <td><span id="speed" name="speed">0</span></td>
                 <td><span id="tiltX" name="tiltX">0</span></td>
                 <td><span id="tiltY" name="tiltY">0</span></td>
-                <td><span id="tiltZ" name="tiltZ">0</span></td>
                 <td><span id="tiltS" name="tiltS">0</span></td>
                 <td><span id="accX" name="accX">0</span></td>
                 <td><span id="accY" name="accY">0</span></td>
-                <td><span id="accZ" name="accZ">0</span></td>
                 <td><span id="accS" name="accS">0</span></td>
             </tr>
         </table><br>
-        <button>Calibrate</button>
+        <form method="post" id="partBForm">
+            <input type="submit" name="btn" value="Calibrate">
+        </form>
         <h3>Usage</h3>
         <ul>
             <li>Fill flask, place on machine, press "Calibrate"</li>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Part C</title>
+    <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
+</head>
+
+<body>
+    <form method="post" id="partCForm">
+        <h1>TRC Automation Project Team 122 Test</h1>
+        <h1>Part C</h1>
+        <div id="Controls">
+            <h2>Calibration</h2>
+            <input type="submit" name="btn" value="Tare Load Cell"><br>
+            <input type="number" id="amount" name="amount" value="0"><input type="submit" name="btn" value="Calibrate Load Cell"><br>
+            <input type="submit" name="btn" value="Calibrate IMU">
+        </div>
+        <div id="Run Program">
+            <h2>Calibration</h2>
+            <input type="submit" name="btn" value="Program Start">
+        </div>
+        <div id="Output">
+            <h2>Output</h2>
+            <img src="graph.png" alt="Graph">
+        </div>
+    </form>
+</body>
+
+</html>
