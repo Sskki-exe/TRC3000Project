@@ -150,6 +150,13 @@ def sample_color():
     return dominant_color(image_rb)
 
 def plot_color_change(color_change, times):
+    """
+    Title: Color change plot
+    Description: This function will plot color change over time
+    Inputs: color_change: list of list of color change [[c1:rgb], [c2:rgb], ...], and times each color was found 
+            and the last value being the time of the entire process.
+    Outputs: Plot of color change over time
+    """
     fig = plt.figure(figsize=(5, 2))
     ax = fig.add_subplot(111)
     for i, color in enumerate(color_change):
@@ -229,6 +236,3 @@ def foam_height(path):
     nz = np.nonzero(hard_mask)
     height = abs(np.min(nz[0]) - np.max(nz[0])) # miny minx maxy maxx
     return height * 0.33 # scaling factor from pixel -> mm
-
-
-print(foam_height("ProjectPics\Light_LS1HCover.jpg"))
