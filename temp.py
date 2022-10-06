@@ -120,3 +120,21 @@ dominant_color(dst)
 #     cv2.waitKey(0)
     
 # detect_bottle("./ProjectPics/im22.jpg")
+
+# Determines average color of an image
+# Refs: https://www.delftstack.com/howto/python/opencv-average-color-of-image/#:~:text=NumPy%20in%20Python.-,Use%20the%20average()%20Function%20of%20NumPy%20to%20Find%20the,the%20total%20number%20of%20elements.
+def average_color():
+    # Read image and store it in a matrix of RGB triplet values
+    img = cv2.imread("image.jpg")
+    # Find average of rgb values of matrix
+    average_color_row = np.average(img, axis=0)
+    average_color = np.average(average_color_row, axis=0)
+    print(average_color)
+
+    # Dispaly image of average color
+    display_avg_color = np.ones((312, 312, 3), dtype=np.uint8)
+    display_avg_color[:, :] = average_color
+
+    cv2.imshow('Source image', img)
+    cv2.imshow('Average Color', display_avg_color)
+    cv2.waitKey(0)
