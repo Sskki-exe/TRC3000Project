@@ -10,10 +10,10 @@ def stuffC():
     return jsonify(m=mass,fl=fl)
 
 @app.route('/', methods=["GET","POST"])
-def clickPrint():
+def home():
     if request.method == "POST":
         pass
-    return render_template('partC.html')
+    return render_template('partC.html', labels = ["a","b","c"], values = [1,2,3])
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=80)
