@@ -1,6 +1,13 @@
-from flask import Flask, request, render_template
+from random import random
+from flask import Flask, request, render_template, jsonify
 
 app = Flask(__name__)
+
+@app.route('/getdataC', methods= ['GET'])
+def stuffC():
+    mass = random.random()
+    fl = random.random()
+    return jsonify(m=mass,fl=fl)
 
 @app.route('/', methods=["GET","POST"])
 def clickPrint():
