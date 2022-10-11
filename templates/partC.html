@@ -50,7 +50,14 @@
             type: "line",
             data: {
                 labels: ["a","b","c","d","e"],
-                series: [1,2,3,4,2]
+                datasets: [
+                    {
+                        label: "Color Value",
+                        data: {[1,2,3,4,2]},
+                        fill: false,
+                        borderColor:"rgb(0,0,0)",
+                        lineTension:0.1
+                    }]
             },
         options: {
             responsive: false
@@ -71,7 +78,14 @@
                     $("#mass").text(data.m);
                     var data = {
                         labels: ["a","b","c","d","e"],
-                        series: [5,4,3,2,1]
+                        datasets: [
+                            {
+                                label: "Color Value",
+                                data: {[5,4,23,2,1]},
+                                fill: false,
+                                borderColor:"rgb(0,0,0)",
+                                lineTension:0.1
+                            }]
                     };
                     lineGraph.update(data);
                 });
