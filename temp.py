@@ -1,5 +1,3 @@
-from asyncio.windows_events import NULL
-from cmath import sqrt
 from flask import Flask, request, render_template, jsonify
 
 app = Flask(__name__)
@@ -12,6 +10,10 @@ def stuffC():
 def partC():
     if request.method == "POST":
         btn = request.form['btn']
+        if btn == "Calibrate Load Cell":
+            print(btn)
+        if btn == "Calibrate IMU":
+            print(btn)
         if btn == "Program Start":
             pass #function to start program here
     return render_template('partC.html')
