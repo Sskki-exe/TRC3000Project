@@ -7,15 +7,7 @@
     <script src="{{ url_for('static', filename='Chart.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
     <script>
-        setInterval(updateData,1000);
-        function updateData() {
-            $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
-            $.getJSON($SCRIPT_ROOT + "/getdataC",
-                function (data) {
-                    $("#foamLevel").text(data.fl);
-                    $("#mass").text(data.m);
-                });
-        };   
+        
     </script>
 </head>
 
@@ -59,6 +51,15 @@
             document.getElementById("date").innerHTML = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
             document.getElementById("time").innerHTML = today.getHours() + ":" + today.getMinutes()
         };
+        setInterval(updateData,1000);
+        function updateData() {
+            $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+            $.getJSON($SCRIPT_ROOT + "/getdataC",
+                function (data) {
+                    $("#foamLevel").text(data.fl);
+                    $("#mass").text(data.m);
+                });
+        };   
     </script>
 </body>
 
