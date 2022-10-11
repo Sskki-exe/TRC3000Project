@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 @app.route('/getdataC', methods= ['GET'])
 def stuffC():
-    mass = random.random()
-    fl = random.random()
+    mass = random()
+    fl = random()
     return jsonify(m=mass,fl=fl)
 
 @app.route('/', methods=["GET","POST"])
