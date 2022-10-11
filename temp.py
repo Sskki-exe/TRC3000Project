@@ -9,7 +9,7 @@ def stuffC():
     fl = random.random()
     labels = ["a","b","c","d","e"]
     values = random.sample(range(1,10),5)
-    return jsonify(m=mass,fl=fl,{'l':labels},{'v':values})
+    return jsonify(m=mass,fl=fl,l=labels,v=values)
 
 @app.route('/', methods=["GET","POST"])
 def home():
