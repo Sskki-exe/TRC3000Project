@@ -4,7 +4,7 @@
 <head>
     <title>Part C</title>
     <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
-    <script src="{{ url_for('static', filename='Chart.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='chartist.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
     <script>
         
@@ -45,23 +45,27 @@
         </div>
     </form>
     <script>
-        var ctx = document.getElementById("lineGraph").getContext("2d");
-        var lineGraph = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: ["a","b","c","d","e"],
-                datasets: [
-                    {
-                        label: "Color Value",
-                        data: {[1,2,3,4,2]},
-                        fill: false,
-                        borderColor:"rgb(0,0,0)",
-                        lineTension:0.1
-                    }]
-            },
-        options: {
+        var data = {
+            labels: ["a","b","c","d","e"],
+            series: [1,2,3,4,5]
+        };
+        var options = {
             responsive: false
-        }});
+        }
+        var myChart = new Chartist.Line('#lineGraph', data, options);
+        
+        function updateData() {
+            var getData = $.get('/getdataC');
+            getData.done(function(results){
+            var data = {
+            labels: ["a","b","c","d","e"],
+            series: [results.v]
+            };
+            myChart.update(data)
+        });
+        }
+
+        setInterval(updateData,1000);
 
         setInterval(updateTime,1000);
         function updateTime() {
@@ -69,6 +73,7 @@
             document.getElementById("date").innerHTML = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
             document.getElementById("time").innerHTML = today.getHours() + ":" + today.getMinutes()
         };
+        /**
         setInterval(updateData,1000);
         function updateData() {
             $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
@@ -89,7 +94,7 @@
                     };
                     lineGraph.update(data);
                 });
-        };   
+        };**/        
     </script>
 </body>
 
