@@ -59,7 +59,7 @@
             var getData = $.get('/getdataC');
             getData.done(function(results){
             var data = {
-            labels: ["a","b","c","d","e"],
+            labels: [results.l],
             series: [results.v]
             };
             myChart.update(data)

@@ -31,8 +31,10 @@ def stuffB():
 @app.route('/getdataC', methods= ['GET'])
 def stuffC():
     mass = main.readLS()
-    fl = 0
-    return jsonify(m=mass,fl=fl)
+    foamLevel = 0 #replace with foam level function
+    dataLabels = ["a","b","c"] #replace with list of timestamps
+    dataValues = [1,2,3] #replace with list of color values
+    return jsonify(m=mass,fl=foamLevel,l=dataLabels,v=dataValues)
 
 @app.route('/partA', methods=["POST"])
 def partA():
