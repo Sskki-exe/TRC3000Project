@@ -5,7 +5,6 @@
     <title>Part C</title>
     <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
     <script src="{{ url_for('static', filename='chartist.min.js')}}"></script>
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='chartist.min.css')}}">
     <script>
         
@@ -21,10 +20,6 @@
             <input type="submit" name="btn" value="Calibrate Load Cell"><br>
             <input type="submit" name="btn" value="Calibrate IMU"><br>
             <input type="submit" name="btn" value="Program Start">
-        </div>
-        <div id="Graphs">
-            <h2>Graphs</h2>
-            <div class="ct-chart ct-perfect-fourth"></div>
         </div>
         <div id="Readout">
             <h2>Readout</h2>
@@ -43,6 +38,10 @@
                 </tr>
                 </tr>
             </table>
+        </div>
+        <div id="Graphs">
+            <h2>Graphs</h2>
+            <div class="ct-chart ct-perfect-fourth"></div>
         </div>
     </form>
     <script>
