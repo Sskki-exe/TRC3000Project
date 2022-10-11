@@ -6,6 +6,7 @@
     <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
     <script src="{{ url_for('static', filename='chartist.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chartist.min.css')}}">
     <script>
         
     </script>
@@ -50,7 +51,8 @@
             series: [1,2,3,4,5]
         };
         var options = {
-            responsive: false
+            width: 800,
+            height: 600
         }
         var myChart = new Chartist.Line('#lineGraph', data, options);
         
@@ -65,7 +67,7 @@
         });
         }
 
-        setInterval(updateData,1000);
+        //setInterval(updateData,1000);
 
         setInterval(updateTime,1000);
         function updateTime() {
