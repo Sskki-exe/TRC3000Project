@@ -46,21 +46,6 @@
     </form>
     <script>
         var ctx = document.getElementById("lineGraph").getContext("2d");
-        var lineGraph = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: {{ labels | safe }},
-                datasets: [ {
-                    label: "Color Value",
-                    data: {{ values | safe}},
-                    fill: false,
-                    borderColor: "rgb(0,0,0)",
-                    lineTension: 0.1                    
-                }]
-        },
-        options: {
-            responsive: false
-        }});
         setInterval(updateTime,1000);
         function updateTime() {
             var today = new Date();
@@ -76,6 +61,22 @@
                     $("#mass").text(data.m);
                 });
             
+
+            var lineGraph = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: {{ labels | safe }},
+                    datasets: [ {
+                        label: "Color Value",
+                        data: {{ values | safe}},
+                        fill: false,
+                        borderColor: "rgb(0,0,0)",
+                        lineTension: 0.1                    
+                    }]
+            },
+            options: {
+                responsive: false
+            }});
         };   
     </script>
 </body>
