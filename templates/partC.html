@@ -48,7 +48,7 @@
         var ctx = document.getElementById("lineGraph").getContext("2d");
         var lineGraph = new Chart(ctx, {
             type: "line",
-            data:
+            data: {
                 labels: {{ labels | safe }},
                 datasets: [ {
                     label: "Color Value",
