@@ -59,24 +59,16 @@
                 function (data) {
                     $("#foamLevel").text(data.fl);
                     $("#mass").text(data.m);
+                    var lineGraph = new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: [data.l],
+                            series: [data.v]
+                        },
+                    options: {
+                        responsive: false
+                    }});
                 });
-            
-
-            var lineGraph = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: {{ labels | safe }},
-                    datasets: [ {
-                        label: "Color Value",
-                        data: {{ values | safe}},
-                        fill: false,
-                        borderColor: "rgb(0,0,0)",
-                        lineTension: 0.1                    
-                    }]
-            },
-            options: {
-                responsive: false
-            }});
         };   
     </script>
 </body>
