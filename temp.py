@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 @app.route('/getdataC', methods= ['GET'])
 def stuffC():
-    mass = random.random()
-    fl = random.random()
+    mass = int(random.random()*10)
+    fl = int(random.random()*10)
     labels = ["a","b","c","d","e"]
     values = random.sample(range(1,10),5)
     return jsonify(m=mass,fl=fl,l=labels,v=values)

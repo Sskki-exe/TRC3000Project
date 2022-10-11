@@ -46,6 +46,16 @@
     </form>
     <script>
         var ctx = document.getElementById("lineGraph").getContext("2d");
+        var lineGraph = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: ["a","b","c","d","e"],
+                series: [1,2,3,4,2]
+            },
+        options: {
+            responsive: false
+        }});
+
         setInterval(updateTime,1000);
         function updateTime() {
             var today = new Date();
@@ -59,15 +69,11 @@
                 function (data) {
                     $("#foamLevel").text(data.fl);
                     $("#mass").text(data.m);
-                    var lineGraph = new Chart(ctx, {
-                        type: "line",
-                        data: {
-                            labels: ["a","b","c","d","e"],
-                            series: [data.v]
-                        },
-                    options: {
-                        responsive: false
-                    }});
+                    var data = {
+                        labels: ["a","b","c","d","e"],
+                        series: [5,4,3,2,1]
+                    };
+                    lineGraph.update(data);
                 });
         };   
     </script>
