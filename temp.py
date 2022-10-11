@@ -57,7 +57,7 @@ def partB():
             pass #calibration function goes here
     return render_template('partB.html')
 
-@app.route('/', methods=["POST"])
+@app.route('/', methods=["GET","POST"])
 def partC():
     if request.method == "POST":
         btn = request.form['btn']
