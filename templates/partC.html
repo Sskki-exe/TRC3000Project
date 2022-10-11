@@ -24,7 +24,7 @@
         </div>
         <div id="Graphs">
             <h2>Graphs</h2>
-            <div id="lineGraph"></div>
+            <div class="ct-chart ct-perfect-fourth"></div>
         </div>
         <div id="Readout">
             <h2>Readout</h2>
@@ -54,7 +54,7 @@
             width: 800,
             height: 600
         }
-        var myChart = new Chartist.Line('#lineGraph', data, options);
+        var myChart = new Chartist.Line('.ct-chart', data, options);
         
         function updateData() {
             var getData = $.get('/getdataC');
