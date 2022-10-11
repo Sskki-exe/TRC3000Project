@@ -5,7 +5,17 @@
     <title>Part C</title>
     <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='partA.css')}}">
-    <link rel="stylesheet" href="partA.css">
+    <script>
+        setInterval(updateData,1000);
+        function updateData() {
+            $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
+            $.getJSON($SCRIPT_ROOT + "/getdataC",
+                function (data) {
+                    $("#foamLevel").text(data.fl);
+                    $("#mass").text(data.m);
+                });
+        };   
+    </script>
 </head>
 
 <body>
@@ -14,9 +24,9 @@
         <h1>Part C</h1>
         <div id="Controls">
             <h2>Controls</h2>
-            <input type="submit" name="btn" value="Start"><br>
             <input type="submit" name="btn" value="Calibrate Load Cell"><br>
-            <input type="submit" name="btn" value="Calibrate IMU">
+            <input type="submit" name="btn" value="Calibrate IMU"><br>
+            <input type="submit" name="btn" value="Program Start">
         </div>
         <div id="Graphs">
             <h2>Graphs</h2>
@@ -28,17 +38,27 @@
                 <tr>
                     <th>Foam Level</th>
                     <th>Mass (g)</th>
-                    <th>Date - Time</th>
+                    <th>Date</th>
+                    <th>Time</th>
                 </tr>
                 <tr>
                     <td><span id="foamLevel" name="foamLevel">0</span></td>
                     <td><span id="mass" name="mass">0</span></td>
-                    <td><span id="dateTime" name="dateTime">0</span></td>
+                    <td><span id="date" name="date">Date Unavailable</span></td>
+                    <td><span id="time" name="time">Time Unavailable</span></td>
                 </tr>
                 </tr>
             </table>
         </div>
     </form>
+    <script>
+        setInterval(updateTime,1000);
+        function updateTime() {
+            var today = new Date();
+            document.getElementById("date").innerHTML = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+            document.getElementById("time").innerHTML = today.getHours() + ":" + today.getMinutes()
+        };   
+    </script>
 </body>
 
 </html>

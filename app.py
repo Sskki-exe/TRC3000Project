@@ -29,6 +29,12 @@ def stuffB():
 
     return jsonify(speed=speed,tx=tx,ty=ty,ts=ts,ax=ax,ay=ay,aS=aS)
 
+@app.route('/getdataC', methods= ['GET'])
+def stuffC():
+    mass = main.readLS()
+    fl = 0
+    return jsonify(m=mass,fl=fl)
+
 @app.route('/partA', methods=["POST"])
 def partA():
     if request.method == "POST":
@@ -57,9 +63,7 @@ def partB():
 def partC():
     if request.method == "POST":
         btn = request.form['btn']
-        if btn == "Tare Load Cell":
-            main.tareLS()
-        if btn == "Calibrate LC":
+        if btn == "Calibrate Load Cell":
             main.calibrateLS(request.form['amount'])
         if btn == "Calibrate IMU":
             main.MPU_calibrate()
