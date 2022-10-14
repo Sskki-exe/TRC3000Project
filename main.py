@@ -1,35 +1,53 @@
 #Leave comment when not in raspberry pi
-
 #Import relevant files
 from email.mime import image
 import RPi.GPIO as GPIO
 import smbus
 from time import sleep
 from hx711py.hx711 import HX711
-import picamera
 import cv2
 import numpy as np
-from sklearn.cluster import KMeans
 import sys
 import math
 from datetime import datetime
 from gpiozero import AngularServo
+import os
+import time
+#Pat Light --------------------------------------------------------
+#Light Initiliasation
+light_relay_pin=23 #8 from top outside
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(light_relay_pin,GPIO.OUT)
+GPIO.output(light_relay_pin, GPIO.LOW)
 
-activateIMU=0
-lightState=0
-
-def toggleLight():
-    global lightState
-    if(lightState):
-        lightState=1
-        lightOn()
-    else:
-        lightState=0
-        lightOff()
+def lightOn():
+    """
+    Title: Light ON
+    Description: This function sets the pin 23 high which the light to turn on
+    """
+    global currentAngle
+    print("light on")
+    GPIO.output(light_relay_pin,GPIO.HIGH)
+    setAngle(currentAngle,True)
+def lightOff():
+    """
+    Title: Light OFF
+    Description: This function sets pin 23 Low, which cuts power to the light, turning it off
+    """
+    global currentAngle
+    print("light off")
+    GPIO.output(light_relay_pin, GPIO.LOW)
+    setAngle(currentAngle,True)
+def lightCleanup():
+    """
+    Title: Light Cleanup
+    Description: This function clears the GPIO programming to the relay
+    """
+    GPIO.cleanup ## after you are done make sure to cleanup (it will turn the light back on)
 
 #Spin servo @Dylan--------------------------------------------------------
 currentAngle = 0
-def setAngle(angle,delay=0.5):
+def setAngle(angle,lightCorrect=False):
     """
     Title: Set Angle
     Description: This formula sets the angle of the servo and also updates the value of the current angle. It ranges from -90<angle<90 degrees. This utilises a PWM approach and uses the max and minimum pulse widths to alter the angles
@@ -41,26 +59,16 @@ def setAngle(angle,delay=0.5):
     #create the connection between servo, GPIO pin 17, and setting the minimum and maximum pulse width which dictates the angle
     servo = AngularServo(17,min_pulse_width = 0.0006,max_pulse_width = 0.00255)
     servo.angle = angle #set the angle
-    if(activateIMU):
-        MPU_test(1)
-    sleep(delay) #give time to move the servo
+    sleep(1) #give time to move the servo
+    #repeat twice to fix light power issue
+    servo.angle = angle #set the angle
+    sleep(1) #give time to move the servo
     #set instructions to an unused pin as to 'turn off' the servo and reduce jitter
-    servo = AngularServo(18,min_pulse_width = 0.001,max_pulse_width = 0.002)
+    servo = AngularServo(21,min_pulse_width = 0.001,max_pulse_width = 0.002)
     currentAngle = angle #update current angle
-    print('Angle set to ' + angle)
+    if (not lightCorrect):
+        print('Angle set to ' + str(angle))
 
-def moveServo(angle,stepDelay):
-    if stepDelay<0:
-        print("Not enough delay")
-        return
-    if angle is currentAngle:
-        print("No change in angle")
-        return
-    step=1
-    if angle<currentAngle:
-        step=-1
-    for i in range(1,abs(currentAngle-angle)):
-        setAngle(currentAngle+step,stepDelay)
 #Read load sensor @pat ------------------------------------------------------------------------------
 # ref:https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/
 # reference unit has been obtained using a known weight
@@ -72,19 +80,23 @@ hx.set_reference_unit(referenceUnit)
 hx.reset()
 
 # this function is used to tare the load cell
-def calibrateLS(knownWeight):
+def calibrateLS():
     """
     Title: Calibrate Load Cell
     Description: used initialise, tare and calibrate load cell
     """
     tareLS()
-    #print(" enter known weight and place weight on the scale")
-    #knownWeight=input()
+    print(" enter known weight and place weight on the scale")
+    knownWeight=input()
     givenWeight= readLS()
     referenceUnit = givenWeight/float(knownWeight)
     hx.set_reading_format("MSB", "MSB")
     hx.set_reference_unit(referenceUnit)
     hx.reset()
+    
+    if(abs(readLS() - float(knownWeight))>1):
+        print("Error in calibration. Please remove weight and retry")
+        
 
 
 def tareLS():
@@ -103,8 +115,8 @@ def readLS():
     val = hx.get_weight(5)
     hx.power_down()
     hx.power_up()
-    sleep(0.1)
-    return round(val,2)
+    sleep(1)
+    return val
 
 #Read IMU @Kaelan-----------------------------------------------------------------------------------------------------------
 #IMU is called the MPU6050
@@ -141,9 +153,6 @@ def MPU_init():
     """
     global bus, MPU_initialised
     
-    if MPU_initialised==True:
-        print("Already Initialised")
-        return None
     
     print("Initialising MPU6050")
     #Create registers used for MPU6050
@@ -319,14 +328,45 @@ def MPU_test(numTimes):
         for x in range(numTimes):
             print('{0:8} {1:8} {2:8} {3:8} {4:8} {5:8} {6:8} {7:8}'.format(MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_getValue('wX'),MPU_getValue('wY'),MPU_getValue('wZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]))
 
-def MPU_getOutputs():
+recordedValues=[] #Global list used to store a experiment results from MPU_singleTest
+def MPU_singleTest(numTimes,variable,recordValues):
     """
-    Title: MPU6050 Inertia Measurement Unit Get Outputs
-    Description: This function is used to output the user-friendly values of acceleration in gforce for th x,y and z axes. And the roll(tilt around the x axis) and the pitch (tilt of the y axis) measured in degrees
-    Outputs: returns an array of the values in order of
-                AccelerationX AccelerationY AccelerationY Roll(TiltX) Pitch(TiltY)
+    Title: MPU6050 Inertia Measurement Unit Single Variable Test
+    Description: This function loops the MPU6050 output for a single variable for a set number of times or infinitely, with the option to save the values to a list
+    Inputs:
+        numTimes = number of loop iterations (or readings) you want, alternatively can write 'inf' for infinite looping
+        variable = refers to which variable from the MPU6050 you wish to read
+            Options aX, aY, aZ, tiltX or roll, tiltY or pitch; all written as a string
+        recordValues = Boolean value determining whether or not to save values to the list recordedValues.
+            Note - will overwrite current recordedValues values
+    Outputs:
+        Not specified but will update recordedValues list
     """
-    return MPU_getValue('aX'),MPU_getValue('aY'),MPU_getValue('aZ'),MPU_tiltAngles()[0],MPU_tiltAngles()[1]
+    global recordedValues #ensure we are working with the global variable
+    recordedValues = [] #clear the list
+    #Printing
+    print('{0:>50}'.format(variable)) #print the variable title
+    #obtain relevant value from variable name
+    if variable=="roll" or "tiltX":
+        outputValue = MPU_tiltAngles()[0]
+    elif variable == "pitch" or "tiltY":
+        outputValue = MPU_tiltAngles()[1]
+    else:
+        outputValue = MPU_getValue(variable)
+    #print to console indefinitely or set number of times
+    if (numTimes == 'inf'):
+        while(True):
+            print('{0:50}'.format(outputValue))
+            if recordValues == True:
+                recordedValues.append(outputValue)
+    else:
+        for x in range(numTimes):
+            print('{0:50}'.format(outputValue))
+            if recordValues == True:
+                recordedValues.append(outputValue)
+    
+                      
+#--------------------------------------------------
 #--------------------------------------------------
 #Acess USB Camera since PiCamera Port is broken on our RaspberryPi
 def takePic():
@@ -347,7 +387,8 @@ def takePic():
         if k!=1:
             break
     cv2.imwrite(('/home/raspberry/ProjectPics/'+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg'),image) #save photo to specified folder with current date and time
-    cv2.imwrite(('templates/photo.jpg'),image)
     cam.release() #stop using camera
     #cv2.destroyAllWindows() #destroy window displaying photo
-    print('Photo taken and saved successfully under '+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg')
+    print('Photo taken and saved successfully at location /home/raspberry/ProjectPics, under name'+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg')
+
+
