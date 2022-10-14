@@ -170,6 +170,7 @@ def plot_color_change(color_change, times):
     plt.title("Color change of Sample Over Time")
     plt.xlabel("Time (s)")
     plt.show()
+    plt.savefig("templates/colourChange.png")
 
 def foam_height(path):
     """
@@ -235,4 +236,4 @@ def foam_height(path):
     # Get the smallest & largest non-zero values in y
     nz = np.nonzero(hard_mask)
     height = abs(np.min(nz[0]) - np.max(nz[0])) # miny minx maxy maxx
-    return height * 0.33 # scaling factor from pixel -> mm
+    return round(height * 0.33,2) # scaling factor from pixel -> mm

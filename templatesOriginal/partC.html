@@ -6,64 +6,42 @@
     <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
     <script src="{{ url_for('static', filename='chartist.min.js')}}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='chartist.min.css')}}">
-    <link rel="stylesheet" href="partA.css">
     <script>
-        setInterval(updateData,100);
-        function updateData() {
-            $SCRIPT_ROOT = {{request.script_root | tojson | safe}};
-            $.getJSON($SCRIPT_ROOT + "/getdataB",
-                function (data) {
-                    $("#colour").text(data.tx);
-                });
-        };   
+        
     </script>
 </head>
 
 <body>
     <form method="post" id="partCForm">
-        <div class="titleBox">
-            <div class="pageSwap">
-                <Button class="pageBtn">Main</Button>
-                <Button class="pageBtn">Load Cell</Button>
-            </div>
-            <div>
-                <h1 class="title">TRC3000 Team 122</h1>
-            </div>
-            <div class="pageSwap">
-                <Button class="pageBtn">Movement</Button>
-                <Button class="pageBtn">Imagery</Button>
-            </div>
+        <h1>TRC Automation Project Team 122 Test</h1>
+        <h1>Part C</h1>
+        <div id="Controls">
+            <h2>Controls</h2>
+            <input type="submit" name="btn" value="Calibrate Load Cell"><br>
+            <input type="submit" name="btn" value="Calibrate IMU"><br>
+            <input type="submit" name="btn" value="Program Start">
         </div>
-        <div class="cells backcolour">
-            <div id="Controls" class="quarter photoContainer">
-                <div>
-                    <h2>Camera Functions</h2>
-                    <input type="submit" name="btn" style="width: 90%;" value="Take Photo"><br>
-                    <input type="submit" name="btn2" style="width: 90%;" value="Toggle Light"><br>
-                </div>
-                <div>
-                    <img class="image" id="photo" name="photo" src="Light_2FCover.jpg">
-                </div>
-            </div><br>
-            <div id="Readout" class="quarter">
-                <h2>Analysis</h2>
-                <table>
-                    <tr>
-                        <th style="width: 50%;">Foam Level (mm)</th>
-                        <th style="width: 50%;">Colour</th>
-                    </tr>
-                    <tr>
-                        <td><span id="foamLevel" name="foamLevel">0</span></td>
-                        <td><span id="colour" name="colour">0</span></td>
-                    </tr>
-                    </tr>
-                </table>
-            </div><br>
-            <div id="Graphs" class="quarter">
-                <h2>Graph</h2>
-                <img src="colourChange.png">
-                <div class="ct-chart ct-perfect-fourth"></div>
-            </div>
+        <div id="Readout">
+            <h2>Readout</h2>
+            <table>
+                <tr>
+                    <th>Foam Level</th>
+                    <th>Mass (g)</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+                <tr>
+                    <td><span id="foamLevel" name="foamLevel">0</span></td>
+                    <td><span id="mass" name="mass">0</span></td>
+                    <td><span id="date" name="date">Date Unavailable</span></td>
+                    <td><span id="time" name="time">Time Unavailable</span></td>
+                </tr>
+                </tr>
+            </table>
+        </div>
+        <div id="Graphs">
+            <h2>Graphs</h2>
+            <div class="ct-chart ct-perfect-fourth"></div>
         </div>
     </form>
     <script>

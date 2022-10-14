@@ -94,7 +94,7 @@ def readLS():
     hx.power_down()
     hx.power_up()
     sleep(0.1)
-    return val
+    return round(val,2)
 
 #Read IMU @Kaelan-----------------------------------------------------------------------------------------------------------
 #IMU is called the MPU6050
@@ -337,25 +337,7 @@ def takePic():
         if k!=1:
             break
     cv2.imwrite(('/home/raspberry/ProjectPics/'+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg'),image) #save photo to specified folder with current date and time
+    cv2.imwrite(('templates/photo.jpg'),image)
     cam.release() #stop using camera
     #cv2.destroyAllWindows() #destroy window displaying photo
     print('Photo taken and saved successfully under '+now.strftime("%Y-%m-%d_%H:%M:%S")+'.jpg')
-
-#--------------------------------------------------
-#Acceleration test
-#NOT COMPLETE
-def accelerationTest(lowerTol,sampleTol,initialSteps,initialDelay):
-    """
-    lowerTol: Amount of weight before "something" is detected
-    sampleTol: Lower tolerance of the sample weight
-    initialSteps: Amount of steps to intially use
-    initialDelay: Length of delay between steps
-
-    returns the maximum acceleration of the sample until the sample falls off
-    """
-    while readLS()<lowerTol:
-        sleep(1)
-    sampleWeight=readLS()-sampleTol
-    while readLS()>sampleWeight:
-        moveServo(180,initialSteps,initialDelay)
-        initialDelay=initialDelay-1
