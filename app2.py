@@ -56,8 +56,10 @@ def partB():
 def partC():
     if request.method == "POST":
         btn = request.form['btn']
-        if btn == "Capture Image":
+        if btn == "Take Photo":
             main.takePic()
+        if btn == "Toggle Light":
+            main.toggleLight()
         if btn == "Detect Colour":
             pass #main. ADD COLOUR DETECTION
     return render_template('partC.html')

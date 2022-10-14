@@ -13,7 +13,6 @@ td,th {
     text-align: center;
     font-size: xx-large;
 }
-
 th{
     background-color:lightskyblue;
 }
@@ -23,7 +22,11 @@ body{
     font-family:Arial, Helvetica, sans-serif;
     font-size: 25px;
 }
-
+.active {
+  background-color:navy;
+  color: azure;
+  font-weight:bolder;
+}
 .quarter{
     width: 90vw;
     background-color:white;

@@ -16,6 +16,16 @@ from datetime import datetime
 from gpiozero import AngularServo
 
 activateIMU=0
+lightState=0
+
+def toggleLight():
+    global lightState
+    if(lightState):
+        lightState=1
+        lightOn()
+    else:
+        lightState=0
+        lightOff()
 
 #Spin servo @Dylan--------------------------------------------------------
 currentAngle = 0
